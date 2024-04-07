@@ -1,5 +1,5 @@
 ﻿/* 
- 
+
 YOU ARE NOT ALLOWED TO MODIFY ANY FUNCTION DEFINIDTION's PROVIDED.
 WRITE YOUR CODE IN THE RESPECTIVE QUESTION FUNCTION BLOCK
 
@@ -48,13 +48,13 @@ namespace ISM6225_Spring_2024_Assignment_2
 
             //Question 6:
             Console.WriteLine("Question 6:");
-            int[] nums5 = { 3,6,9,1 };
+            int[] nums5 = { 3, 6, 9, 1 };
             int maxGap = MaximumGap(nums5);
             Console.WriteLine(maxGap);
 
             //Question 7:
             Console.WriteLine("Question 7:");
-            int[] nums6 = { 2,1,2 };
+            int[] nums6 = { 2, 1, 2 };
             int largestPerimeterResult = LargestPerimeter(nums6);
             Console.WriteLine(largestPerimeterResult);
 
@@ -95,13 +95,28 @@ namespace ISM6225_Spring_2024_Assignment_2
         nums is sorted in non-decreasing order.
         */
 
+
         public static int RemoveDuplicates(int[] nums)
         {
             try
             {
                 // Write your code here and you can modify the return value according to the requirements
-                return 0;
+
+                if (nums == null || nums.Length == 0)
+                    return 0;        // if there is nothing in array(nums) and validating the constraints
+
+                int uc = 1; // At least one unique element is present
+                for (int i = 1; i < nums.Length; i++)
+                {
+                    if (nums[i] != nums[i - 1])
+                    {
+                        nums[uc] = nums[i];
+                        uc++;
+                    }
+                }
+                return uc; //uc is the number of unique elements
             }
+
             catch (Exception)
             {
                 throw;
@@ -135,7 +150,31 @@ namespace ISM6225_Spring_2024_Assignment_2
             try
             {
                 // Write your code here and you can modify the return value according to the requirements
-                return new List<int>();
+                if (nums == null || nums.Length == 0)
+                    return new List<int>(); // Return an empty list if nums is null or empty
+
+                int insertPos = 0; // Position to insert non-zero elements
+
+                // Traverse the array
+                for (int i = 0; i < nums.Length; i++)
+                {
+                    // If the current element is non-zero, move it to the insert position
+                    if (nums[i] != 0)
+                    {
+                        nums[insertPos] = nums[i];
+                        insertPos++;
+                    }
+                }
+
+
+                for (int i = insertPos; i < nums.Length; i++)
+                {
+                    nums[i] = 0;                        //Starting from the current 'insertPosition' up to the end of the array
+                }
+
+                // Convert the array to a list and return it
+                return new List<int>(nums);
+
             }
             catch (Exception)
             {
@@ -185,8 +224,47 @@ namespace ISM6225_Spring_2024_Assignment_2
         {
             try
             {
+
                 // Write your code here and you can modify the return value according to the requirements
-                return new List<IList<int>>();
+
+                Array.Sort(nums); // Sort the array
+                var triplets = new List<IList<int>>(); // Store the triplets
+
+                for (int i = 0; i < nums.Length - 2; i++) // Iterate through the array starting from the first element to the third-to-last element, because we need at least three numbers to form a triplet
+                {
+                    if (i > 0 && nums[i] == nums[i - 1]) continue; // Skip duplicates
+
+                    int left = i + 1, right = nums.Length - 1; // Set up two pointers: left starting just after the current number i, and right at the end of the array
+                    while (left < right)
+                    {
+                        int sum = nums[i] + nums[left] + nums[right]; // Calculate the sum of the values at the i, left, and right pointers
+
+                        if (sum == 0)
+                        {
+                            // If the sum is zero, we've found a valid triplet, which we add to our triplets list
+                            triplets.Add(new List<int> { nums[i], nums[left], nums[right] });
+
+                            // Skip duplicates
+                            while (left < right && nums[left] == nums[left + 1]) left++;
+                            while (left < right && nums[right] == nums[right - 1]) right--;
+
+                            // Move both pointers
+                            left++;
+                            right--;
+                        }
+                        else if (sum < 0)
+                        {
+                            left++; // If the sum is less than zero, we move the left pointer to the right to increase the sum
+                        }
+                        else
+                        {
+                            right--; // If the sum is greater than zero, we move the right pointer to the left to decrease the sum
+                        }
+                    }
+                }
+
+                // Return the list of triplets
+                return new List<IList<int>>(triplets);
             }
             catch (Exception)
             {
@@ -221,7 +299,30 @@ namespace ISM6225_Spring_2024_Assignment_2
             try
             {
                 // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                int maxCount = 0; // Variable to store the maximum count of consecutive ones
+                int currentCount = 0; // Variable to store the count of consecutive ones for the current sequence
+
+                foreach (int num in nums)
+                {
+                    if (num == 1)
+                    {
+                        // If the current number is 1, increment the count of consecutive ones
+                        currentCount++;
+                    }
+                    else
+                    {
+                        // If the current number is 0, update the maximum count if the current count is greater
+                        maxCount = Math.Max(maxCount, currentCount);
+                        // Reset the count of consecutive ones for the current sequence
+                        currentCount = 0;
+                    }
+                }
+
+                // Update the maximum count after processing the last element
+                maxCount = Math.Max(maxCount, currentCount);
+
+                return maxCount; // Return the maximum count of consecutive ones
+
             }
             catch (Exception)
             {
@@ -257,8 +358,20 @@ namespace ISM6225_Spring_2024_Assignment_2
             try
             {
                 // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                int decimalNumber = 0; // Initialize the decimal number to 0
+                int baseValue = 1; // Initialize the base value to 2^0
+
+                while (binary != 0)
+                {
+                    int remainder = binary % 10; // Get the rightmost digit of the binary number
+                    binary = binary / 10; // Remove the rightmost digit from the binary number
+                    decimalNumber = decimalNumber + remainder * baseValue; // Update the decimal number by adding the contribution of the current digit
+                    baseValue = baseValue * 2; // Update the base value for the next digit
+                }
+
+                return decimalNumber; // Return the decimal equivalent of the binary number
             }
+
             catch (Exception)
             {
                 throw;
@@ -295,147 +408,217 @@ namespace ISM6225_Spring_2024_Assignment_2
             try
             {
                 // Write your code here and you can modify the return value according to the requirements
-                return 0;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
 
-        /*
+                if (nums == null || nums.Length < 2)
+                    return 0; // If the array contains less than two elements, return 0
 
-        Question:7
-        Given an integer array nums, return the largest perimeter of a triangle with a non-zero area, formed from three of these lengths. If it is impossible to form any triangle of a non-zero area, return 0.
+                int minNum = int.MaxValue; // Initialize the minimum number to the maximum integer value
+                int maxNum = int.MinValue; // Initialize the maximum number to the minimum integer value
 
-        Example 1:
-
-        Input: nums = [2,1,2]
-        Output: 5
-        Explanation: You can form a triangle with three side lengths: 1, 2, and 2.
-        Example 2:
-
-        Input: nums = [1,2,1,10]
-        Output: 0
-        Explanation: 
-        You cannot use the side lengths 1, 1, and 2 to form a triangle.
-        You cannot use the side lengths 1, 1, and 10 to form a triangle.
-        You cannot use the side lengths 1, 2, and 10 to form a triangle.
-        As we cannot use any three side lengths to form a triangle of non-zero area, we return 0.
-
-        Constraints:
-
-        3 <= nums.length <= 104
-        1 <= nums[i] <= 106
-
-        */
-
-        public static int LargestPerimeter(int[] nums)
-        {
-            try
-            {
-                // Write your code here and you can modify the return value according to the requirements
-                return 0;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        /*
-
-        Question:8
-
-        Given two strings s and part, perform the following operation on s until all occurrences of the substring part are removed:
-
-        Find the leftmost occurrence of the substring part and remove it from s.
-        Return s after removing all occurrences of part.
-
-        A substring is a contiguous sequence of characters in a string.
-
- 
-
-        Example 1:
-
-        Input: s = "daabcbaabcbc", part = "abc"
-        Output: "dab"
-        Explanation: The following operations are done:
-        - s = "daabcbaabcbc", remove "abc" starting at index 2, so s = "dabaabcbc".
-        - s = "dabaabcbc", remove "abc" starting at index 4, so s = "dababc".
-        - s = "dababc", remove "abc" starting at index 3, so s = "dab".
-        Now s has no occurrences of "abc".
-        Example 2:
-
-        Input: s = "axxxxyyyyb", part = "xy"
-        Output: "ab"
-        Explanation: The following operations are done:
-        - s = "axxxxyyyyb", remove "xy" starting at index 4 so s = "axxxyyyb".
-        - s = "axxxyyyb", remove "xy" starting at index 3 so s = "axxyyb".
-        - s = "axxyyb", remove "xy" starting at index 2 so s = "axyb".
-        - s = "axyb", remove "xy" starting at index 1 so s = "ab".
-        Now s has no occurrences of "xy".
-
-        Constraints:
-
-        1 <= s.length <= 1000
-        1 <= part.length <= 1000
-        s​​​​​​ and part consists of lowercase English letters.
-
-        */
-
-        public static string RemoveOccurrences(string s, string part)
-        {
-            try
-            {
-                // Write your code here and you can modify the return value according to the requirements
-                return "";
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        /* Inbuilt Functions - Don't Change the below functions */
-        static string ConvertIListToNestedList(IList<IList<int>> input)
-        {
-            StringBuilder sb = new StringBuilder();
-
-            sb.Append("["); // Add the opening square bracket for the outer list
-
-            for (int i = 0; i < input.Count; i++)
-            {
-                IList<int> innerList = input[i];
-                sb.Append("[" + string.Join(",", innerList) + "]");
-
-                // Add a comma unless it's the last inner list
-                if (i < input.Count - 1)
+                // Find the minimum and maximum numbers in the array
+                foreach (int num in nums)
                 {
-                    sb.Append(",");
+                    minNum = Math.Min(minNum, num);
+                    maxNum = Math.Max(maxNum, num);
                 }
+
+                // Need to create these buckets, so that I can run it in linear time and space.
+                // Else, could have easily done sort array and compare subsequent elements
+
+                int bucketSize = Math.Max(1, (maxNum - minNum) / (nums.Length - 1)); // Calculate the size of each bucket
+                int bucketCount = (maxNum - minNum) / bucketSize + 1; // Calculate the number of buckets
+
+                // Create and initialize the buckets
+                int[] minBucket = new int[bucketCount];
+                int[] maxBucket = new int[bucketCount];
+                Array.Fill(minBucket, int.MaxValue);
+                Array.Fill(maxBucket, int.MinValue);
+
+                // Distribute numbers into buckets
+                foreach (int num in nums)
+                {
+                    int index = (num - minNum) / bucketSize; // Calculate the index of the bucket
+                    minBucket[index] = Math.Min(minBucket[index], num); // Update the minimum number in the bucket
+                    maxBucket[index] = Math.Max(maxBucket[index], num); // Update the maximum number in the bucket
+                }
+
+                int maxGap = 0;
+                int prevMax = minNum;
+
+                // Calculate the maximum gap between non-empty consecutive buckets
+                for (int i = 0; i < bucketCount; i++)
+                {
+                    if (minBucket[i] != int.MaxValue)
+                    {
+                        maxGap = Math.Max(maxGap, minBucket[i] - prevMax);
+                        prevMax = maxBucket[i];
+                    }
+                }
+
+                return maxGap; // Return the maximum gap
             }
-
-            sb.Append("]"); // Add the closing square bracket for the outer list
-
-            return sb.ToString();
-        }
-
-
-        static string ConvertIListToArray(IList<int> input)
-        {
-            // Create an array to hold the strings in input
-            string[] strArray = new string[input.Count];
-
-            for (int i = 0; i < input.Count; i++)
+            
+            catch (Exception)
             {
-                strArray[i] = "" + input[i] + ""; // Enclose each string in double quotes
+                throw;
             }
+}
 
-            // Join the strings in strArray with commas and enclose them in square brackets
-            string result = "[" + string.Join(",", strArray) + "]";
+/*
 
-            return result;
+Question:7
+Given an integer array nums, return the largest perimeter of a triangle with a non-zero area, formed from three of these lengths. If it is impossible to form any triangle of a non-zero area, return 0.
+
+Example 1:
+
+Input: nums = [2,1,2]
+Output: 5
+Explanation: You can form a triangle with three side lengths: 1, 2, and 2.
+Example 2:
+
+Input: nums = [1,2,1,10]
+Output: 0
+Explanation: 
+You cannot use the side lengths 1, 1, and 2 to form a triangle.
+You cannot use the side lengths 1, 1, and 10 to form a triangle.
+You cannot use the side lengths 1, 2, and 10 to form a triangle.
+As we cannot use any three side lengths to form a triangle of non-zero area, we return 0.
+
+Constraints:
+
+3 <= nums.length <= 104
+1 <= nums[i] <= 106
+
+*/
+
+public static int LargestPerimeter(int[] nums)
+{
+    try
+    {
+                // Write your code here and you can modify the return value according to the requirements
+                // Sort the array in non-decreasing order
+                Array.Sort(nums);
+
+                // Start from the end to find the largest possible perimeter
+                for (int i = nums.Length - 1; i >= 2; i--)
+                {
+                    // Check if the current three sides can form a triangle
+                    if (nums[i - 2] + nums[i - 1] > nums[i])
+                    {
+                        // If yes, return the perimeter
+                        return nums[i - 2] + nums[i - 1] + nums[i];
+                    }
+                }
+                // If no triangle can be formed, return 0
+                return 0;
+
+            }
+    catch (Exception)
+    {
+        throw;
+    }
+}
+
+/*
+
+Question:8
+
+Given two strings s and part, perform the following operation on s until all occurrences of the substring part are removed:
+
+Find the leftmost occurrence of the substring part and remove it from s.
+Return s after removing all occurrences of part.
+
+A substring is a contiguous sequence of characters in a string.
+
+
+
+Example 1:
+
+Input: s = "daabcbaabcbc", part = "abc"
+Output: "dab"
+Explanation: The following operations are done:
+- s = "daabcbaabcbc", remove "abc" starting at index 2, so s = "dabaabcbc".
+- s = "dabaabcbc", remove "abc" starting at index 4, so s = "dababc".
+- s = "dababc", remove "abc" starting at index 3, so s = "dab".
+Now s has no occurrences of "abc".
+Example 2:
+
+Input: s = "axxxxyyyyb", part = "xy"
+Output: "ab"
+Explanation: The following operations are done:
+- s = "axxxxyyyyb", remove "xy" starting at index 4 so s = "axxxyyyb".
+- s = "axxxyyyb", remove "xy" starting at index 3 so s = "axxyyb".
+- s = "axxyyb", remove "xy" starting at index 2 so s = "axyb".
+- s = "axyb", remove "xy" starting at index 1 so s = "ab".
+Now s has no occurrences of "xy".
+
+Constraints:
+
+1 <= s.length <= 1000
+1 <= part.length <= 1000
+s​​​​​​ and part consists of lowercase English letters.
+
+*/
+
+public static string RemoveOccurrences(string s, string part)
+{
+    try
+    {
+        // Write your code here and you can modify the return value according to the requirements
+        while (s.Contains(part))
+        {
+            int index = s.IndexOf(part); // Find the index of the leftmost occurrence of 'part' in 's'
+            s = s.Remove(index, part.Length); // Remove 'part' from 's'
         }
+
+        return s; // Return the modified string after removing all occurrences of 'part'
+
+    }
+    catch (Exception)
+    {
+        throw;
+    }
+}
+
+/* Inbuilt Functions - Don't Change the below functions */
+static string ConvertIListToNestedList(IList<IList<int>> input)
+{
+    StringBuilder sb = new StringBuilder();
+
+    sb.Append("["); // Add the opening square bracket for the outer list
+
+    for (int i = 0; i < input.Count; i++)
+    {
+        IList<int> innerList = input[i];
+        sb.Append("[" + string.Join(",", innerList) + "]");
+
+        // Add a comma unless it's the last inner list
+        if (i < input.Count - 1)
+        {
+            sb.Append(",");
+        }
+    }
+
+    sb.Append("]"); // Add the closing square bracket for the outer list
+
+    return sb.ToString();
+}
+
+
+static string ConvertIListToArray(IList<int> input)
+{
+    // Create an array to hold the strings in input
+    string[] strArray = new string[input.Count];
+
+    for (int i = 0; i < input.Count; i++)
+    {
+        strArray[i] = "" + input[i] + ""; // Enclose each string in double quotes
+    }
+
+    // Join the strings in strArray with commas and enclose them in square brackets
+    string result = "[" + string.Join(",", strArray) + "]";
+
+    return result;
+}
     }
 }
